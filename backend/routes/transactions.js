@@ -1,8 +1,9 @@
 const { Router } = require('express');
-const { pool } = require('../db/config');
 const { check } = require('express-validator');
+
 const validateFields = require('../middlewares/validarCampos');
 const { allowedTypes } = require('../helpers/db-validators');
+const { newTransaction } = require('../controllers/transactions');
 
 const router = Router();
 
@@ -23,14 +24,6 @@ router.post('/', [
     check('category', 'Category field is mandatory').not().isEmpty(),
     check('typename').custom( c => allowedTypes( c, ['income', 'expense'] ) ),
     validateFields
-],async( req, res ) => {
-
-    const { concept, amount, date, category, typename } = req.body
-
-    const newIncome = await pool.query("INSERT INTO transactions ( concept, amount, date, category, typename ) "+
-    "VALUES($1, $2, $3, $4, $5) RETURNING *", [concept, amount, date, category, typename]);
-
-    res.json({ ...newIncome.rows['0'] });
-} )
+], newTransaction )
 
 module.exports = router;
