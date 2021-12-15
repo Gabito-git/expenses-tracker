@@ -1,5 +1,7 @@
 const { Router } = require('express');
 const { pool } = require('../db/config');
+const { check } = require('express-validator');
+const validateFields = require('../middlewares/validarCampos');
 
 const router = Router();
 
@@ -13,7 +15,12 @@ const router = Router();
 
 // })
 
-router.post('/incomes', async( req, res ) => {
+router.post('/incomes', [
+    check('concept', 'Concept field is mandatory').not().isEmpty(),
+    check('amount', 'Please provide a valid amount value').isFloat(),
+    check('date', 'Please provide a valid date').isISO8601(),
+    validateFields
+],async( req, res ) => {
 
     const { concept, amount, date } = req.body
 
