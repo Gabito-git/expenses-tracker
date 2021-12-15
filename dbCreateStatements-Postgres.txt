@@ -1,0 +1,17 @@
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+CREATE TABLE IF NOT EXISTS incomes (
+    income_id uuid DEFAULT uuid_generate_v4 (),
+    concept VARCHAR NOT NULL,
+    amount real NOT NULL,
+    date DATE NOT NULL,   
+    PRIMARY KEY (income_id)
+);
+
+CREATE TABLE IF NOT EXISTS expenses (
+    expense_id uuid DEFAULT uuid_generate_v4 (),
+    concept VARCHAR NOT NULL,
+    amount real NOT NULL,
+    date DATE NOT NULL,   
+    PRIMARY KEY (expense_id)
+);
